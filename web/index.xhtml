@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">  
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">  
+<h:head>  
+    <h2><center>All User Information</center></h2>  
+</h:head>  
+<h:body>  
+    <h:form>  
+        <p:commandButton action="Search?faces-redirect=true" icon="ui-icon-search" value="Search" />  
+    </h:form>  
+  
+    <p:spacer> </p:spacer>  
+    <h:form id="form1">  
+        <p:dataTable id="dataTable" var="user" paginator="true" rows="5" value="#{userBean.users}">  
+            <p:column headerText="RecordNo">  
+                <h:outputText value="#{user.recordNo}" />  
+            </p:column>  
+            <p:column headerText="Name">  
+                <h:outputText value="#{user.name}" />  
+            </p:column>  
+            <p:column sortBy="#{user.age}" headerText="Age">  
+                <h:outputText value="#{user.age}" />  
+  
+            </p:column>  
+  
+            <p:column headerText="Sex">  
+                <h:outputText value="#{user.sex}" />  
+            </p:column>  
+            <p:column headerText="Date of Birth">  
+                <h:outputText value="#{user.dob}">  
+                    <f:convertDateTime type="date" pattern="dd-MMM-yyyy" />  
+                </h:outputText>  
+            </p:column>  
+            <p:column headerText="Remark">  
+                <h:outputText value="#{user.remark}" />  
+            </p:column>  
+        </p:dataTable>  
+    </h:form>  
+    <h:panelGroup>  
+        <h3>Add User Information</h3>  
+        <h:form>  
+            <p>User Name:  
+                <p:inputText value="#{userBean.newuser.name}" /></p>  
+            <p>User Age:  
+                <p:inputText value="#{userBean.newuser.age}" />Enter Number Only</p>  
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">  
+                <p>Choose Sex:</p>  
+                <p:selectOneMenu label="Sex:" value="#{userBean.newuser.sex}" id="ulist2">  
+                    <f:selectItem itemLabel="Select One" itemValue="" />  
+                    <f:selectItem itemLabel="Male" itemValue="Male" />  
+                    <f:selectItem itemLabel="Female" itemValue="Female" />  
+                </p:selectOneMenu>  
+            </h:panelGrid>  
+            <p>User Date of Birth:  
+                <p:calendar id="dop" value="#{userBean.newuser.dob}" label="DatePosted:" required="true" pattern="dd/MMM/yyyy" effect="slideDown" requiredMessage="Please Enter Date of Posting!" navigator="true" showButtonPanel="true" yearRange="c-60:c+60" /> </p>  
+            <p>Remark:  
+                <p:inputTextarea value="#{userBean.newuser.remark}" /></p>  
+            <p>  
+                <p:commandButton icon="ui-icon-plusthick" update=":form1:dataTable" type="submit" value="add" action="#{userBean.addUser()}" /></p>  
+        </h:form>  
+    </h:panelGroup>  
+</h:body>  
+  
+</html>  
+
