@@ -1,6 +1,6 @@
 package com.controller.bean;  
 import javax.faces.bean.ManagedBean;  
-import javax.faces.bean.ViewScoped;  
+import javax.faces.view.ViewScoped;  
 import java.util.List;  
 import com.dao.UserDAO;  
 import com.model.pojo.User;  
@@ -19,61 +19,60 @@ public class UserBean implements Serializable
 {  
     private List < User > usersList;  
     private List < User > searchList;  
-    private List < User > searchByRecordNoList;  
+    private List < User > filteredList;
+    
     UserDAO userDao = new UserDAO();  
     User user = new User();  
     User newuser = new User();  
+    
     public List < User > getUsers()  
     {  
         usersList = userDao.AllUsers();  
-        int count = usersList.size();  
+        //int count = usersList.size();  
         return usersList;  
     }  
+    //adding user
     public void addUser()  
     {  
-        String Remark = newuser.getRemark();  
+       // String Remark = newuser.getCoursename();  
         Integer userId = 0;  
         userId = userDao.getId();  
         newuser.setId(userId);  
         String Id = Integer.toString(newuser.getId());  
         newuser.setRecordNo(Integer.toString(userId));  
         userDao.add(newuser);  
-        System.out.println("User successfully saved.");  
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Save Information", "User successfully saved.");  
+        System.out.println("Student successfully saved.");  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Save Information", "Student successfully saved.");  
         RequestContext.getCurrentInstance().showMessageInDialog(message);  
         newuser = new User();  
     }  
+  
     public void changeUser(User user)  
     {  
         this.user = user;  
     }  
+    //updating the users record through editting event and diplay successfull saving
     public void UpdateUser(User user)  
     {  
         String Name = user.getName();  
         FacesMessage message1 = new FacesMessage(FacesMessage.SEVERITY_INFO, "Name", Name);  
         RequestContext.getCurrentInstance().showMessageInDialog(message1);  
         userDao.update(user);  
-        System.out.println("User Info successfully saved.");  
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Save Information", "User updated successfully .");  
+        System.out.println("Student Info successfully saved.");  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Save Information", "Student updated successfully .");  
         RequestContext.getCurrentInstance().showMessageInDialog(message);  
-        user = new User();  
+       // user = new User();  
     }  
+    //deleting record and display record deleted
     public void deleteUser(User user)  
     {  
-        String Name = user.getName();  
-        //FacesMessage message3= new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete Item",contactName);  
-        // RequestContext.getCurrentInstance().showMessageInDialog(message3);  
+       String Name = user.getName();   
         userDao.delete(user);  
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete", "Record deleted successfully");  
         RequestContext.getCurrentInstance().showMessageInDialog(message);  
+        userDao.refresh(user);
     }  
-    public void searchbyRecordno()  
-    {  
-        searchByRecordNoList = userDao.SearchByRecordNo(user.getRecordNo());  
-        int count = searchByRecordNoList.size();  
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Number of Record Selected:", Integer.toString(count));  
-        RequestContext.getCurrentInstance().showMessageInDialog(message);  
-    }  
+
     public User getUser()  
     {  
         return user;  
@@ -102,29 +101,34 @@ public class UserBean implements Serializable
     {  
         return searchList;  
     }  
+    //search
     public void setSearchList(List < User > searchList)  
     {  
         this.searchList = searchList;  
     }  
-    public List < User > getSearchByRecordNoList()  
-    {  
-        return searchByRecordNoList;  
-    }  
-    public void setSearchByRecordNoList(List < User > searchByRecordNoList)  
-    {  
-        this.searchByRecordNoList = searchByRecordNoList;  
-    }  
+  
+    //message diplay on record that is editted when you acept the edit event
     public void onRowEdit(RowEditEvent event)  
     {  
-        FacesMessage msg = new FacesMessage(" Edited Record No", ((User) event.getObject()).getRecordNo());  
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
+        FacesMessage message = new FacesMessage(" Edited Record No", ((User) event.getObject()).getRecordNo());  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
         User editeduser = (User) event.getObject();  
         userDao.update(editeduser);  
     }  
+    //canceling the edit event and display cancel message
     public void onCancel(RowEditEvent event)  
     {  
-        FacesMessage msg = new FacesMessage("Edit Cancelled");  
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
+        FacesMessage message = new FacesMessage("Edit Cancelled");  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
         usersList.remove((User) event.getObject());  
     }  
+    public List<User> getFilteredList() {
+        return filteredList;
+    }
+
+    public void setFilteredList(List<User> filteredList) {
+       this.filteredList = filteredList;
+    }
+ 
+    
 }  

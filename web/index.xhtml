@@ -1,63 +1,157 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">  
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">  
 <h:head>  
-    <h2><center>All User Information</center></h2>  
+    <h:form style="background-color: aqua">
+    <h2><center>Peer Club Members Information</center></h2>  
+    </h:form>
 </h:head>  
 <h:body>  
-    <h:form>  
-        <p:commandButton action="Search?faces-redirect=true" icon="ui-icon-search" value="Search" />  
-    </h:form>  
-  
-    <p:spacer> </p:spacer>  
-    <h:form id="form1">  
-        <p:dataTable id="dataTable" var="user" paginator="true" rows="5" value="#{userBean.users}">  
-            <p:column headerText="RecordNo">  
-                <h:outputText value="#{user.recordNo}" />  
-            </p:column>  
-            <p:column headerText="Name">  
-                <h:outputText value="#{user.name}" />  
-            </p:column>  
-            <p:column sortBy="#{user.age}" headerText="Age">  
-                <h:outputText value="#{user.age}" />  
-  
-            </p:column>  
-  
-            <p:column headerText="Sex">  
-                <h:outputText value="#{user.sex}" />  
-            </p:column>  
-            <p:column headerText="Date of Birth">  
-                <h:outputText value="#{user.dob}">  
-                    <f:convertDateTime type="date" pattern="dd-MMM-yyyy" />  
-                </h:outputText>  
-            </p:column>  
-            <p:column headerText="Remark">  
-                <h:outputText value="#{user.remark}" />  
-            </p:column>  
-        </p:dataTable>  
-    </h:form>  
-    <h:panelGroup>  
-        <h3>Add User Information</h3>  
+    <p:dialog id="userDetail1" widgetVar="$userDetail1" header="Add User" hideEffect="explode" appendTo="@(body)" resizable="false" draggable="false" closeOnEscape="true">  
         <h:form>  
-            <p>User Name:  
-                <p:inputText value="#{userBean.newuser.name}" /></p>  
-            <p>User Age:  
-                <p:inputText value="#{userBean.newuser.age}" />Enter Number Only</p>  
-            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">  
-                <p>Choose Sex:</p>  
-                <p:selectOneMenu label="Sex:" value="#{userBean.newuser.sex}" id="ulist2">  
+  
+            <p:panelGrid columns="2">  
+                <h:outputLabel for="username" value="Student Name: *" />  
+                <p:inputText id="username" value="#{userBean.newuser.name}" label="User Name" placeholder="User Name" />  
+  
+                <h:outputLabel for="userage" value="Student Age" />  
+                <p:inputText id="userage" label="Student Age" value="#{userBean.newuser.age}" placeholder="age" />  
+  
+                <h:outputLabel for="sex" value="Choose Sex" />  
+                <p:selectOneMenu id="sex" label="Choose Sex" value="#{userBean.newuser.sex}" effect="fold">  
                     <f:selectItem itemLabel="Select One" itemValue="" />  
                     <f:selectItem itemLabel="Male" itemValue="Male" />  
                     <f:selectItem itemLabel="Female" itemValue="Female" />  
                 </p:selectOneMenu>  
-            </h:panelGrid>  
-            <p>User Date of Birth:  
-                <p:calendar id="dop" value="#{userBean.newuser.dob}" label="DatePosted:" required="true" pattern="dd/MMM/yyyy" effect="slideDown" requiredMessage="Please Enter Date of Posting!" navigator="true" showButtonPanel="true" yearRange="c-60:c+60" /> </p>  
-            <p>Remark:  
-                <p:inputTextarea value="#{userBean.newuser.remark}" /></p>  
-            <p>  
-                <p:commandButton icon="ui-icon-plusthick" update=":form1:dataTable" type="submit" value="add" action="#{userBean.addUser()}" /></p>  
+                <p:outputLabel for="dob" value="User Date of Birth" />  
+  
+                <p:calendar id="dob" value="#{userBean.newuser.dob}" label="DatePosted:" required="true" pattern="dd/MM/yyyy" effect="slideDown" requiredMessage="Details not saved!" navigator="true" showButtonPanel="true" yearRange="c-60:c+60" placeholder="Date of Birth" />  
+  
+                <p:outputLabel for="coursename" value="Student Course Name" />  
+                <p:inputTextarea id="coursename" label="Student Course Name" value="#{userBean.newuser.coursename}" placeholder="Course Name" />  
+  
+                <p:commandButton value="add" process="@form" id="AddButtonId" ajax="true" icon="ui-icon-plus" update=":form:userTable" actionListener="#{userBean.addUser()}" oncomplete="PF('$userDetail1').hide()" />  
+  
+                <p:commandButton id="cancelAddButtonId" value="Cancel" onclick="handleComplete(xhr, status, args)" />  
+            </p:panelGrid>  
         </h:form>  
-    </h:panelGroup>  
+  
+    </p:dialog>  
+    <h:outputScript>  
+        /* 
+        <![CDATA[ */  
+function handleComplete(xhr, status, args) {  
+if(args && args.validName) {  
+$userDetail1.hide();  
+}  
+}  
+/* ]]>*/  
+  
+    </h:outputScript>  
+    <p:dialog id="userDetail2" widgetVar="$userDetail2" header="Update User" hideEffect="explode" appendTo="@(body)" resizable="false" draggable="false" closeOnEscape="true">  
+        <h:form>  
+            <h:inputHidden value="#{userBean.user.id}" />  
+            <p:panelGrid columns="2">  
+                <h:outputLabel for="recordno" value="Record No: *" />  
+                <p:inputText id="recordno" value="#{userBean.user.recordNo}" label="Record No" placeholder="Record No" />  
+                <h:outputLabel for="username" value="Student Name: *" />  
+                <p:inputText id="username" value="#{userBean.user.name}" label="User Name" placeholder="User Name" />  
+  
+                <h:outputLabel for="userage" value="Student Age" />  
+                <p:inputText id="userage" label="Student Age" value="#{userBean.user.age}" placeholder="age" />  
+  
+                <h:outputLabel for="sex" value="Choose Sex" />  
+                <p:selectOneMenu id="sex" label="Choose Sex" value="#{userBean.user.sex}" effect="fold">  
+                    <f:selectItem itemLabel="Select One" itemValue="" />  
+                    <f:selectItem itemLabel="Male" itemValue="Male" />  
+                    <f:selectItem itemLabel="Female" itemValue="Female" />  
+                </p:selectOneMenu>  
+                <p:outputLabel for="dob" value="User Date of Birth" />  
+  
+                <p:calendar id="dob" value="#{userBean.user.dob}" label="DatePosted:" required="true" pattern="dd/MM/yyyy" effect="slideDown" requiredMessage="Please Enter Date of Birth!" navigator="true" showButtonPanel="true" yearRange="c-60:c+60" placeholder="Date of Birth" />  
+  
+                <p:outputLabel for="coursename" value="Student Course Name" />  
+                <p:inputTextarea id="coursename" label="Student Course Name" value="#{userBean.user.coursename}" placeholder="Remark" />  
+  
+                <p:commandButton value="Update" ajax="true" icon="ui-icon-disk" update=":form:userTable" actionListener="#{userBean.UpdateUser(userBean.user)}" oncomplete="handleComplete(xhr, status, args)" />  
+                <p:commandButton value="Cancel" id="cancelButtonId" onclick="handleComplete(xhr, status, args)" />  
+            </p:panelGrid>  
+        </h:form>  
+  
+    </p:dialog>  
+    <h:outputScript id="handleCompleteScript" target="body">  
+        /* 
+        <![CDATA[ */  
+function handleComplete(xhr, status, args) {  
+if(args && args.validName) {  
+$userDetail2.hide();  
+}  
+}  
+/* ]]>*/  
+    </h:outputScript>  
+  
+    <h:form id="form">  
+        <p:growl id="messages" showDetail="true" /> 
+        <p:commandButton icon="ui-icon-plusthick" id="addUserBtn" value="Add User"  update=":userDetail1" ajax="true" oncomplete="PF('$userDetail1').show()" />  
+  
+        <p:dataTable value="#{userBean.users}" var="user" paginator="true" rows="5" id="userTable"  filteredValue="#{userBean.filteredList}" widgetVar="userTable" 
+                 emptyMessage="No record found with given criteria" sortMode="multiple">  
+             <f:facet name="header"> 
+       <p:outputPanel>
+                <h:outputText value="Search all fields:" />
+                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+            </p:outputPanel>
+                    </f:facet>
+            <p:column headerText="Record No" style="text-align: left;" 
+                      filterBy="#{user.recordNo}" filterMatchMode="contains" sortBy="#{user.recordNo}">  
+                
+                <h:outputText value="#{user.recordNo}" />  
+            </p:column>  
+            <p:column headerText="Name" filterBy="#{user.name}" filterMatchMode="contains" sortBy="#{user.name}">  
+                #{user.name}  
+            </p:column>  
+            <p:column sortBy="#{user.age}" headerText="Age" filterBy="#{user.age}" filterMatchMode="exact" >  
+                <h:outputText value="#{user.age}" />  
+  
+            </p:column>  
+            <p:column headerText="Sex" filterBy="#{user.sex}" filterMatchMode="exact" sortBy="#{user.sex}">  
+                <h:outputText value="#{user.sex}" />  
+            </p:column>  
+  
+            <p:column headerText="Date of Birth" filterBy="#{user.dob}" filterMatchMode="exact" sortBy="#{user.dob}">  
+                <h:outputText value="#{user.dob}">  
+                    <f:convertDateTime type="date" pattern="dd-MMM-yyyy" />  
+                </h:outputText>  
+            </p:column>  
+            <p:column headerText="Course Name" filterBy="#{user.coursename}" filterMatchMode="contains" sortBy="#{user.coursename}">  
+                <h:outputText value="#{user.coursename}" />  
+            </p:column>  
+            <p:column headerText="Edit" style="text-align: center">  
+                <p:commandButton icon="ui-icon-pencil" id="editUserBtn" value="Edit" ajax="true" actionListener="#{userBean.changeUser(user)}" update=":userDetail2" oncomplete="PF('$userDetail2').show()" />  
+  
+            </p:column>  
+  
+            <p:column headerText="Delete" style="text-align: center">  
+  
+                <p:commandButton value="Delete" icon="ui-icon-trash" type="button" onclick="PF('confirmDialog').show()" />  
+                <p:confirmDialog message="Are you sure you want to delete this record?Record once deleted can not be retrieved." header="Deleting" severity="alert" widgetVar="confirmDialog">  
+                    <p:commandButton value="Yes Sure" update=":form:userTable" action="#{userBean.deleteUser(user)}" onclick="PF('confirmDialog').hide();" />  
+                    <p:commandButton value="Cancel" id="cancelButtonId" onclick="handleComplete(xhr, status, args)" />
+                </p:confirmDialog>  
+  
+            </p:column>  
+             
+        </p:dataTable>  
+    </h:form>  
+  <h:outputScript id="handleCompleteScript" target="body">  
+        /* 
+        <![CDATA[ */  
+function handleComplete(xhr, status, args) {  
+if(args && args.validName) {  
+$userDetail1.hide();  
+}  
+}  
+/* ]]>*/  
+    </h:outputScript> 
 </h:body>  
   
 </html>  

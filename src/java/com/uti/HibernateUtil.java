@@ -6,6 +6,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;  
 import org.hibernate.service.ServiceRegistry;  
 import com.model.pojo.User;  
+import org.hibernate.HibernateException;
 /**
  *
  * @author Andrew
@@ -27,7 +28,7 @@ public class HibernateUtil
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);  
             return sessionFactory;  
         }  
-        catch (Throwable ex)  
+        catch (HibernateException ex)  
         {  
             // Make sure you log the exception, as it might be swallowed  
             System.err.println("Initial SessionFactory creation failed." + ex);  

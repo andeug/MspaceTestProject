@@ -1,11 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
 package com.dao;  
 import java.util.List;  
 import java.util.ArrayList;  
@@ -13,8 +5,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;  
 import com.uti.HibernateUtil;  
 import com.model.pojo.User;  
-import javax.faces.application.FacesMessage;  
-import org.primefaces.context.RequestContext;  
+//import javax.faces.application.FacesMessage;  
+import org.hibernate.HibernateException;
+//import org.primefaces.context.RequestContext;  
 /**
  *
  * @author Andrew
@@ -25,6 +18,7 @@ public class UserDAO
     private User newuser;  
     private List < User > DaoAllUsers;  
     private List < User > DaoSearchUserList;  
+   
     //Session session;  
     public List < User > AllUsers()  
     {  
@@ -34,13 +28,13 @@ public class UserDAO
             session.beginTransaction();  
             DaoAllUsers = session.createCriteria(User.class).list();  
             int count = DaoAllUsers.size();  
-            // FacesMessage message1 = new FacesMessage(FacesMessage.SEVERITY_INFO, "List Size", Integer.toString(count));//Debugging Purpose  
+            //displays the number of records in the database
+             //FacesMessage message1 = new FacesMessage(FacesMessage.SEVERITY_INFO, "List Size", Integer.toString(count));//Debugging Purpose  
             //RequestContext.getCurrentInstance().showMessageInDialog(message1);  
             session.getTransaction().commit();  
         }  
-        catch (Exception e)  
+        catch (HibernateException e)  
         {  
-            e.printStackTrace();  
             session.getTransaction().rollback();  
         }  
         session.close();  
@@ -60,30 +54,7 @@ public class UserDAO
         session.flush();  
         session.close();  
         return userId;  
-    }  
-    public List < User > SearchByRecordNo(String RecordNo)  
-    {  
-        Session session = HibernateUtil.getSessionFactory().openSession();  
-        List < User > daoSearchList = new ArrayList < > ();  
-        try  
-        {  
-            session.beginTransaction();  
-            Query qu = session.createQuery("From User U where U.recordNo =:recordNo"); //User is the entity not the table  
-            qu.setParameter("recordNo", RecordNo);  
-            daoSearchList = qu.list();  
-            int count = daoSearchList.size();  
-            session.getTransaction().commit();  
-        }  
-        catch (Exception e)  
-        {  
-            session.getTransaction().rollback();  
-        }  
-        finally  
-        {  
-            session.close();  
-        }  
-        return daoSearchList;  
-    }  
+    }    
     public void add(User newuser)  
     {  
         Session session = HibernateUtil.getSessionFactory().openSession();  
@@ -98,9 +69,8 @@ public class UserDAO
                 newuser.getId());  
             session.getTransaction().commit();  
         }  
-        catch (Exception e)  
+        catch (HibernateException e)  
         {  
-            e.printStackTrace();  
             session.getTransaction().rollback();  
         }  
         session.close();  
@@ -110,7 +80,7 @@ public class UserDAO
         Session session = HibernateUtil.getSessionFactory().openSession();  
         try  
         {  
-            String name = user.getName();  
+           // String name = user.getName();  
             session.beginTransaction();  
             session.delete(user);  
             session.getTransaction().commit();  
@@ -131,11 +101,26 @@ public class UserDAO
             session.flush();  
             session.getTransaction().commit();  
         }  
-        catch (Exception e)  
+        catch (HibernateException e)  
         {  
-            e.printStackTrace();  
             session.getTransaction().rollback();  
         }  
         session.close();  
     }  
+     public void refresh(User user)  
+    {  
+        Session session = HibernateUtil.getSessionFactory().openSession();  
+        try  
+        {  
+            session.beginTransaction();  
+            session.refresh(user);  
+            session.flush();  
+            session.getTransaction().commit();  
+        }  
+        catch (HibernateException e)  
+        {  
+            session.getTransaction().rollback();  
+        }  
+        session.close();  
+    }
 }  

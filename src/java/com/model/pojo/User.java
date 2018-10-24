@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.model.pojo;
-
 
 import java.util.Date;  
 import javax.persistence.Column;  
@@ -29,17 +23,17 @@ public class User implements java.io.Serializable
     private Integer age;  
     private String sex;  
     private Date dob;  
-    private String remark;  
+    private String coursename;  
     public User()  
     {}  
-    public User(String recordNo, String name, Integer age, String sex, Date dob, String remark)  
+    public User(String recordNo, String name, Integer age, String sex, Date dob, String coursename)  
     {  
         this.recordNo = recordNo;  
         this.name = name;  
         this.age = age;  
         this.sex = sex;  
         this.dob = dob;  
-        this.remark = remark;  
+        this.coursename = coursename;  
     }  
     @Id @GeneratedValue(strategy = IDENTITY)  
     @Column(name = "id", unique = true, nullable = false)  
@@ -97,14 +91,14 @@ public class User implements java.io.Serializable
     {  
         this.dob = dob;  
     }  
-    @Column(name = "Remark", length = 50)  
-    public String getRemark()  
+    @Column(name = "Course_Name", length = 50)  
+    public String getCoursename()  
     {  
-        return this.remark;  
+        return this.coursename;  
     }  
-    public void setRemark(String remark)  
+    public void setCoursename(String coursename)  
     {  
-        this.remark = remark;  
+        this.coursename = coursename;  
     }  
     //This method writes the values of contact object with System.out.println(user.toString()) code  
     @Override  
@@ -112,10 +106,11 @@ public class User implements java.io.Serializable
     {  
         return "user" +  
             "\n\t RecordNo: " + this.recordNo +  
-            "\n\t EmployeeName: " + this.name +  
+            "\n\t Student Name: " + this.name +  
             "\n\t Age: " + this.age +  
             "\n\t Sex: " + this.sex +  
             "\n\t Date of Birth: " + this.dob +  
-            "\n\t Remark: " + this.remark;  
-    }  
+            "\n\t Course Name: " + this.coursename;  
+    } 
+
 }  
